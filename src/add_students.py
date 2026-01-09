@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-# Define database path
+
 DB_PATH = os.path.join(os.path.dirname(__file__), '../database/exam_system.db')
 
 def add_10_students():
@@ -9,7 +9,7 @@ def add_10_students():
     cursor = conn.cursor()
     print("--- Adding 10 Students to Database ---")
 
-    # List of 10 Students (ID, Full Name, Photo Path)
+    
     students = [
         ('2023001', 'Alice Smith', '/references/ref_1.jpg'),
         ('2023002', 'Mehmet Yilmaz', '/references/ref_2.jpg'),
@@ -23,7 +23,7 @@ def add_10_students():
         ('2023010', 'Hande Er', '/references/ref_10.jpg')
     ]
 
-    # Insert Students (FIXED COLUMN NAME: photo_ref_path)
+   
     for s in students:
         try:
             cursor.execute("INSERT INTO students (student_number, full_name, photo_ref_path) VALUES (?, ?, ?)", s)
@@ -31,7 +31,7 @@ def add_10_students():
         except sqlite3.IntegrityError:
             print(f"Skipped (Already exists): {s[1]}")
 
-    # Exam Seating Plan (Exam ID: 1)
+    
     roster = [
         (1, 1, 'A1'),
         (1, 2, 'B1'),
