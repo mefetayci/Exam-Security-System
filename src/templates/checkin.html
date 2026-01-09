@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Security Check-in</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; padding-top: 20px; }
+        .status-match { color: green; font-weight: bold; }
+        .status-nomatch { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="d-flex justify-content-end mb-3 gap-2">
+        <a href="/violation" class="btn btn-outline-danger">⚠️ Log Violation (Proctor)</a>
+        <a href="/dashboard" class="btn btn-outline-dark">📊 View Reports (Admin)</a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4>👮 Exam Security System</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center">Student Check-in</h5>
+                    <hr>
+                    <form action="/checkin" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Select Student:</label>
+                            <select name="student_id" class="form-select">
+    <option value="1">Alice Smith (Koltuk: A1)</option>
+    <option value="2">Mehmet Yilmaz (Koltuk: B1)</option>
+    <option value="3">Ayse Demir (Koltuk: C1)</option>
+    <option value="4">Fatma Kaya (Koltuk: A2)</option>
+    <option value="5">Ali Veli (Koltuk: B2)</option>
+    <option value="6">Zeynep Celik (Koltuk: C2)</option>
+    <option value="7">Mustafa Koc (Koltuk: A3)</option>
+    <option value="8">Elif Ozturk (Koltuk: B3)</option>
+    <option value="9">Burak Can (Koltuk: C3)</option>
+    <option value="10">Hande Er (Koltuk: D1)</option>
+</select>
+                        </div>
+                        <div class="mb-3">
+                            <input type="hidden" name="exam_id" value="1">
+                            <label class="form-label">Upload Live Photo:</label>
+                            <input type="file" name="photo" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Current Seat Code:</label>
+                            <input type="text" name="actual_seat" class="form-control" placeholder="e.g. A1" required>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">Verify Identity</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            {% if result %}
+            <div class="alert alert-info mt-4 text-center">
+                <h3>Result</h3>
+                <p>Status: <strong>{{ result.status }}</strong></p>
+                <p>Face Match: <span class="{{ 'status-match' if result.ml_result == 'Match' else 'status-nomatch' }}">{{ result.ml_result }}</span> ({{ result.confidence }})</p>
+                <p>Seat Check: {{ result.seat_status }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
