@@ -4,9 +4,9 @@ from ml_service import FaceVerificationService
 import os
 
 app = Flask(__name__)
-app.secret_key = 'super_secret_key' # Session için gerekli
+app.secret_key = 'super_secret_key' 
 
-# Klasör Ayarları
+
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 REF_FOLDER = os.path.join(os.path.dirname(__file__), 'references')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -14,7 +14,7 @@ os.makedirs(REF_FOLDER, exist_ok=True)
 
 ml_service = FaceVerificationService()
 
-# --- 1. LOGIN EKRANI (Açılış Sayfası) ---
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
@@ -25,26 +25,26 @@ def perform_login():
     password = request.form.get('password')
     role = request.form.get('role')
 
-    # Basit bir kontrol (Demo olduğu için veritabanı sorgusu yapmadan geçiyoruz)
+    
     if password == "1234":
-        session['role'] = role # Rolü hafızaya al
+        session['role'] = role 
         if role == 'Admin':
-            return redirect(url_for('web_dashboard')) # Admin ise Raporlara git
+            return redirect(url_for('web_dashboard')) 
         else:
-            return redirect(url_for('web_checkin'))   # Gözetmen ise Check-in'e git
+            return redirect(url_for('web_checkin'))   
     else:
         return "Invalid Password! Try '1234'", 401
 
-# --- 2. LOGOUT ---
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# --- 3. CHECK-IN SAYFASI (Proctor) ---
+
 @app.route('/checkin', methods=['GET', 'POST'])
 def web_checkin():
-    # Güvenlik Kontrolü: Giriş yapmamışsa login'e at
+    
     if 'role' not in session: return redirect(url_for('login'))
     
     result = None
@@ -93,7 +93,7 @@ def web_checkin():
 
     return render_template('checkin.html', result=result)
 
-# --- 4. DASHBOARD (Admin) ---
+
 @app.route('/dashboard')
 def web_dashboard():
     if 'role' not in session: return redirect(url_for('login'))
@@ -117,7 +117,7 @@ def web_dashboard():
     conn.close()
     return render_template('dashboard.html', checkins=checkins, violations=violations, stats=stats)
 
-# --- 5. VIOLATION LOGGING ---
+
 @app.route('/violation', methods=['GET', 'POST'])
 def log_violation():
     if 'role' not in session: return redirect(url_for('login'))
